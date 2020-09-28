@@ -1,0 +1,294 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+body,h1 {font-family: "Raleway", sans-serif}
+body, html {height: 100%}
+
+.navbar{
+  z-index: 10;
+}
+
+
+.background{
+  position: absolute;
+  background-image: url('images/wood-591631_1920.jpg');
+  height: 100%;
+  width: 100%;
+  left: 0px;
+  background-size: cover;
+  z-index: 1;
+  opacity: 50%;
+}
+
+.crab1{
+  position: absolute;
+  top: 100px;
+  right: 0px;
+  background-image: url('images/crab1.png');
+  height: 800px;
+  width: 1100px;
+  background-size: cover;
+  z-index: 2;
+  opacity: 95%;
+}
+
+.login-box{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -70px;
+  margin-left: -140px;
+  background-image: url('images/marble-2341290.jpg');
+  padding-top: 0px;
+  padding-left: 30px;
+  padding-bottom: 30px;
+  width: 280px;
+  height: 160px;
+  z-index: 2;
+}
+
+.login-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+  z-index: 4;
+}
+.form {
+  position: relative;
+  z-index: 3;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 170px auto 0px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.form button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #00b3b3;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form button:hover,.form button:active,.form button:focus {
+  background: #006767;
+}
+.form .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+.form .message a {
+  color: #00b3b3;
+  text-decoration: none;
+}
+.form .register-form {
+  display: none;
+}
+
+.user-info{
+  width: 900px;
+  height: 900px;
+  margin: auto;
+
+}
+.user-page-form {
+  position: relative;
+  z-index: 3;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 170px auto 0px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.user-page-form input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.user-page-form button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #00b3b3;
+  width: 160px;
+  height: 40px;
+  border: 0;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+.user-page-form button:hover,.form button:active,.form button:focus {
+  background: #006767;
+}
+
+.username-block {
+  width: 100%;
+  padding: 3% 0 0;
+  margin: auto;
+  z-index: 4;
+}
+
+.friends-block {
+  position: absolute;
+  width: 420px;
+  height: 600px;
+  padding: 3% 0 0;
+  margin-left: 0px;
+  z-index: 4;
+}
+
+.active-games-block {
+  position: absolute;
+  width: 420px;
+  height: 600px;
+  padding: 3% 0 0;
+  margin-left: 480px;
+  z-index: 4;
+}
+
+.scoreboard{
+  position: absolute;
+  width: 420px;
+  height: 540px;
+  padding: 3% 0 0;
+  left: 1080px;
+  z-index: 4;
+}
+
+.scoreboard button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #00b3b3;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+.scoreboard button:hover,.form button:active,.form button:focus {
+  background: #006767;
+}
+
+.play-area{
+  position: absolute;
+  width: 960px;
+  height: 900px;
+}
+
+.game-board{
+  position: absolute;
+  background-color: white;
+  background: rgba(255, 255, 255, 0.1);
+  width: 750px;
+  height: 880px;
+  padding: 35px 35px 35px 35px;
+  margin: 50px;
+  margin-left: 150px;
+  z-index: 20;
+}
+
+.game-board-bkgnd{
+  position: absolute;
+  background-color: #C0C0C0;
+  border: 1px solid grey;
+  width: 750px;
+  height: 750px;
+  padding: 35px 35px 35px 35px;
+  margin: 50px;
+  margin-left: 150px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  z-index: 19;
+}
+
+.square{
+  width: 100%;
+  height: 100%;
+  border: 5px solid  #F5F5F5;
+}
+
+.letter-tile{
+  position: absolute;
+  padding-top: 3px;
+  width: 35px;
+  height: 35px;
+  background-image: url("./images/wood-tile.jpg");
+  opacity: 95%;
+  text-align: center;
+  border: 1px solid #808080;
+  border-radius: 3px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2), 0 1px 4px 0 rgba(0, 0, 0, 0.24);
+  z-index: 25;
+}
+
+.play-panel{
+  position: absolute;
+  width: 320px;
+  height: 36px;
+  top: 836px;
+  left: 578px;
+  z-index: 26;
+}
+
+.play-panel-form {
+  position: relative;
+  z-index: 27;
+  background: #FFFFFF;
+  margin: 0px auto 0px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.play-panel button {
+
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #00b3b3;
+  width: 60px;
+  height: 35px;
+  border: 0;
+  margin-right: 5px;
+  padding: 0px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.play-panel button:hover,.form button:active,.form button:focus {
+  background: #006767;
+}
