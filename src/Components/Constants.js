@@ -19,5 +19,6 @@ export const Tiles = {
     },
     ID7: {
       x: 7, y: 17
+      
     },
   };
