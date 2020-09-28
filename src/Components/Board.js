@@ -20,6 +20,7 @@ class Board extends React.Component {
         const squares =[]
         for (let i = 0; i < 270; i++) {
             squares.push(this.renderSquare(i, this.state.xy))
+
         }
         return squares
     }
