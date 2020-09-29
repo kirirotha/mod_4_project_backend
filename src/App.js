@@ -24,7 +24,8 @@ class App extends Component {
     username: "",
     userId: "",
     game: "",
-    opponentName: ""
+    opponentName: "",
+    userScore: ""
   }
 
   componentDidMount(){
@@ -74,12 +75,21 @@ class App extends Component {
     })
   }
 
-  handleContinue = (game, opponentName) =>{
+  handleContinue = (game, opponentName, userScore) =>{
     // console.log(game)
     this.setState({
       ...this.state,
       game: game,
-      opponentName: opponentName
+      opponentName: opponentName,
+      userScore: userScore
+    })
+  }
+
+  updateScore = (newScore) =>{
+    // console.log(newScore)
+    this.setState({
+      ...this.state,
+      userScore: newScore,
     })
   }
 
@@ -117,7 +127,7 @@ class App extends Component {
 
             <Route path="/game" component={() => {
               return <Game handleLogOut={this.handleLogOut} username={this.state.username} opponentName={this.state.opponentName}
-                            userId={this.state.userId} backToUser={this.backToUser} game={this.state.game}/>}} />
+                            userId={this.state.userId} backToUser={this.backToUser} game={this.state.game} updateScore={this.updateScore} userScore={this.state.userScore}/>}} />
 
             <Route path="/logout" component={() => {
               localStorage.clear()

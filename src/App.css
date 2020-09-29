@@ -145,7 +145,7 @@ body, html {height: 100%}
   cursor: pointer;
 }
 
-.user-page-form button:hover,.form button:active,.form button:focus {
+.user-page-form button:hover,.user-page-form button:active,.user-page-form button:focus {
   background: #006767;
 }
 
@@ -198,7 +198,7 @@ body, html {height: 100%}
   cursor: pointer;
 }
 
-.scoreboard button:hover,.form button:active,.form button:focus {
+.scoreboard button:hover,.scoreboard button:active,.scoreboard button:focus {
   background: #006767;
 }
 
@@ -289,6 +289,10 @@ body, html {height: 100%}
   transition: all 0.3 ease;
   cursor: pointer;
 }
-.play-panel button:hover,.form button:active,.form button:focus {
+.play-panel button:hover,.play-panel button:active,.play-panel button:focus {
   background: #006767;
+}
+
+.play-panel button:disabled{
+   background-color:#E0FFFF; 
 }

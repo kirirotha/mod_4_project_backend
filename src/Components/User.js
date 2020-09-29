@@ -122,11 +122,12 @@ class User extends React.Component {
     return this.state.myGames.map(game =>{
         i++
         let opponentName = this.getOpponentName(game)
+        let userScore = this.getUserScore(game)
         return <div key={i}>
                     <h2 style={{marginTop:'30px'}}>
                         {`vs. ${opponentName}`}
                         <Link to='/game'><button id="continue-game" type="continue-game" 
-                        value="continue-game" onClick={() => this.handleContinueClick(game, opponentName)}
+                        value="continue-game" onClick={() => this.handleContinueClick(game, opponentName, userScore)}
                         style={{position:'absolute', right:'20px'}}>Continue Game</button></Link>
                     </h2>   
                 </div>
@@ -142,14 +143,24 @@ class User extends React.Component {
       return opponent[0].username
   }
 
+  getUserScore = (game) =>{
+    let userScore = ""
+    if (this.props.userId === game.user1_id){
+      userScore = game.user1_score
+    }else{
+      userScore = game.user2_score
+    }
+    return userScore
+  }
+
   handleLogOutClick = () => {
     // console.log(this.props)
     this.props.handleLogOut()
   }
 
-  handleContinueClick = (game, opponentName) => {
+  handleContinueClick = (game, opponentName, userScore) => {
     // console.log(game)
-    this.props.handleContinue(game, opponentName)
+    this.props.handleContinue(game, opponentName, userScore)
   }
    
   render(){

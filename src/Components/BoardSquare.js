@@ -5,10 +5,13 @@ import { useDrop } from 'react-dnd'
 
 
 
-const BoardSquare = ({ x, y, movePiece, children })  => {
+const BoardSquare = ({ x, y, letter, tileIndex, movePiece, children })  => {
     const [{ isOver }, drop] = useDrop({
       accept: Tiles.ID1,
-      drop: () => movePiece(x, y),
+      drop: () => {
+            movePiece(x, y)
+            
+        },
       collect: monitor => ({
         isOver: !!monitor.isOver(),
       }),
