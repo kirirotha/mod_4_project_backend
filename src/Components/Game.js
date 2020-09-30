@@ -175,6 +175,8 @@ class Game extends React.Component {
       let playerState
       if(this.props.game.player1turn === true && this.props.game.user1_id === this.props.userId){
             playerState = false
+      }else if(this.props.game.player1turn === false && this.props.game.user2_id === this.props.userId){
+            playerState = false
       }else{
             playerState = true
       }
@@ -317,13 +319,15 @@ class Game extends React.Component {
             patchData = {
                 user1_bag: user_bag,
                 user1_score: newScore,
-                player1turn: false 
+                player1turn: false,
+                accepted: true 
             }
         }else{
             patchData = {
                 user2_bag: user_bag,
                 user2_score: newScore,
-                player1turn: true  
+                player1turn: true,
+                accepted: true   
             } 
         }
         console.log(patchData)

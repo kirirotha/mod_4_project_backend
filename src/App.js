@@ -93,6 +93,27 @@ class App extends Component {
     })
   }
 
+  setTiles = (newTiles, opponentName, user1_id, user2_id, game_id) =>{
+    console.log(newTiles)
+    this.setState({
+      ...this.state,
+      game: {...this.state.game,
+        id: game_id,
+        user1_id: user1_id,
+        user2_id: user2_id,
+        user1_bag: newTiles[0],
+        user2_bag: newTiles[1],
+        accepted: true,
+        active: true,
+        player1turn: true,
+        user1_score: 0,
+        user2_score: 0
+      },
+      opponentName: opponentName
+    })
+
+  }
+
   backToUser = () =>{
 
   }
@@ -123,7 +144,8 @@ class App extends Component {
             <Route path="/signup" component={SignUp} />
 
             <Route path="/user" component={() => {
-              return <User handleLogOut={this.handleLogOut} username={this.state.username} userId={this.state.userId} handleContinue={this.handleContinue}/>}} />
+              return <User handleLogOut={this.handleLogOut} username={this.state.username} userId={this.state.userId} handleContinue={this.handleContinue}
+                            setTiles={this.setTiles}/>}} />
 
             <Route path="/game" component={() => {
               return <Game handleLogOut={this.handleLogOut} username={this.state.username} opponentName={this.state.opponentName}
