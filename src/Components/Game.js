@@ -383,7 +383,7 @@ class Game extends React.Component {
         // this.props.updateScore(tt)
          let newScore = this.state.userScore + tt
         //  this.props.updateScore(newScore)
-        console.log(newScore)
+        // console.log(newScore)
         //  this.setState({
         //     ...this.state,
         //     newScore: newScore}, () =>{

@@ -141,7 +141,9 @@ class App extends Component {
               return <Login handleLogIn={this.handleLogIn} failedLogIn={this.failedLogIn}/> 
             }}/>
 
-            <Route path="/signup" component={SignUp} />
+            <Route path="/signup" component={()=>{
+              return <SignUp handleLogIn={this.handleLogIn} failedLogIn={this.failedLogIn}/> 
+            }} />
 
             <Route path="/user" component={() => {
               return <User handleLogOut={this.handleLogOut} username={this.state.username} userId={this.state.userId} handleContinue={this.handleContinue}

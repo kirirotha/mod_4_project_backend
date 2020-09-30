@@ -1,4 +1,6 @@
 import React from 'react';
+import { withRouter } from 'react-router';
+
 
 import { Link } from 'react-router-dom';
 
@@ -12,16 +14,21 @@ class SignUp extends React.Component {
   }
 
   handleInputChange = (e) => {
+    // console.log(e.target.name)
+    // console.log(e.target.value)
     this.setState({
       [e.target.name]: e.target.value
     })
   }
 
   handleSubmit = (e) => {
-    //e.preventDefault()
+    // console.log('click')
+    e.preventDefault()
     const newUser = {
-      username: this.state.username,
-      password: this.state.password
+      user:{
+        username: this.state.username,
+        password: this.state.password
+      }
     }
     console.log(newUser)
     fetch('http://localhost:3001/signup',{
@@ -32,8 +39,22 @@ class SignUp extends React.Component {
     .then(res =>res.json())
     .then(token=> {
         console.log(token)
-        //localStorage.setItem('auth_key', token['auth_key'])
+        if (token.auth_key){
+          // console.log(token.user_id)
+            localStorage.setItem('auth_key',token['auth_key'])
+            localStorage.setItem('username',this.state.username)
+            localStorage.setItem('userId',this.state.userId)
+            this.props.handleLogIn(this.state.username, token.user_id)
+            this.props.history.push('/user')
+        }else{
+            this.props.failedLogIn()
+            this.props.history.push('/login')
+        }
     })
+  }
+
+  goToUserPage = () => {
+
   }
 
   render(){
@@ -47,8 +68,8 @@ class SignUp extends React.Component {
                         <h2> Create Account </h2>
                         <input type="text" onChange={this.handleInputChange} name='username' placeholder="Username"  />
                         <input type="password" onChange={this.handleInputChange} name='password' placeholder="Password"/>
-                        <input type="password" onChange={this.handleInputChange} name='password-verify' placeholder="Verify Password"/>
-                        <Link to='/user'><button id="submit" type="submit" value="Submit">create account </button></Link>
+                        <input type="password-verify" onChange={this.handleInputChange} name='password-verify' placeholder="Verify Password"/>
+                        <button id="submit" type="submit" value="Submit">create account </button>
                         <p className="message">Already have an account? <Link to='/login'>Click Here</Link></p>
                     </form>
                 </div>
@@ -59,5 +80,4 @@ class SignUp extends React.Component {
     )
   }
 }
-
-export default SignUp;
+export default withRouter(SignUp);
