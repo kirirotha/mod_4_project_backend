@@ -31,6 +31,19 @@ body, html {height: 100%}
   opacity: 95%;
 }
 
+.large-logo{
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  margin-left: -350px;
+  background-image: url('images/crabble_logo.png');
+  background-size: cover;
+  height: 300px;
+  width: 700px;
+  z-index: 4;
+  opacity: 90%;
+}
+
 .login-box{
   position: absolute;
   top: 50%;
@@ -43,7 +56,7 @@ body, html {height: 100%}
   padding-bottom: 30px;
   width: 280px;
   height: 160px;
-  z-index: 2;
+  z-index: 6;
 }
 
 .login-page {
@@ -54,10 +67,10 @@ body, html {height: 100%}
 }
 .form {
   position: relative;
-  z-index: 3;
+  z-index: 6;
   background: #FFFFFF;
   max-width: 360px;
-  margin: 170px auto 0px;
+  margin: 200px auto 0px;
   padding: 45px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
@@ -109,15 +122,45 @@ body, html {height: 100%}
   margin: auto;
 
 }
-.user-page-form {
+
+.user-page-top-form {
   position: relative;
   z-index: 3;
-  background: #FFFFFF;
+  background-image: url('images/user_crab_bgknd.jpg');
+  background-size: 900px;
   max-width: 360px;
   margin: 170px auto 0px;
   padding: 45px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.user-page-top-form button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #00b3b3;
+  width: 160px;
+  height: 40px;
+  border: 0;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+.user-page-form {
+  position: relative;
+  z-index: 3;
+  background-image: url('images/marble-2341290.jpg');
+  background-size: 1000px;
+  max-width: 360px;
+  margin: 170px auto 0px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  filter: alpha(opacity=20);
 }
 .user-page-form input {
   font-family: "Roboto", sans-serif;
@@ -129,6 +172,7 @@ body, html {height: 100%}
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
+  outline: solid 1px grey;
 }
 .user-page-form button {
   font-family: "Roboto", sans-serif;

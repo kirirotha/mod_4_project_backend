@@ -93,36 +93,103 @@ class User extends React.Component {
     let i = 0
     return this.state.myFriends.map(friend =>{
         i++
-        return <div key={i}>
-                    <h2 style={{marginTop:'30px'}}>{friend.username}
-                        
-                      {this.renderFriendsButton(friend)}
-                    </h2>   
-                </div>
+        if(friend !== undefined){
+          return <div key={i}>
+                      <h2 style={{marginTop:'30px'}}>{friend.username ? friend.username : null}
+                          
+                        {this.renderFriendsButton(friend)}
+                      </h2>   
+                  </div>
+        }
     })
   }
 
   renderFriendsButton = (friend) => {
     let friendship = this.state.friendships.filter(friendship => friendship.user1_id === friend.id || friendship.user2_id === friend.id)
-    if(friendship[0].accepted === false){
-      return(
-        <div style={{marginTop: '0px'}}>
-              <button id="accept-friendship" type="accept-friendship" 
-                  value="accept-friendship" onClick={() => this.handleAcceptFriendsClick()}
-                  style={{position:'absolute', right:'140px', backgroundColor: 'green', width: '100px'}}>Accept</button>
-            <button id="decline-friendship" type="decline-friendship" 
-                  value="decline-friendship" onClick={() => this.handleDeclineFriendsClick()}
-                  style={{position:'absolute', right:'20px', backgroundColor: 'red', width: '100px'}}>Decline</button>
-        </div>
+    if(friendship[0] !== undefined){ 
+      if(friendship[0].accepted === false && friendship[0].user2_id === this.props.userId){
+        return(
+          <>
+                <button id="accept-friendship" type="accept-friendship" 
+                    value="accept-friendship" onClick={() => this.handleAcceptFriendsClick(friendship)}
+                    style={{position:'absolute', right:'140px', backgroundColor: 'green', width: '100px'}}>Accept</button>
+              <button id="decline-friendship" type="decline-friendship" 
+                    value="decline-friendship" onClick={() => this.handleDeclineFriendsClick(friendship)}
+                    style={{position:'absolute', right:'20px', backgroundColor: 'red', width: '100px'}}>Decline</button>
+          </>
+          )
+        }else if(friendship[0].accepted === false && friendship[0].user1_id === this.props.userId){
+          return(<button id="pending-friend" type="pending-friend" 
+                            style={{position:'absolute', right:'20px', backgroundColor: 'grey'}}>Pending</button>
+          )
+        }else{
+          return(<button id="start-game" type="start-game" 
+                            value={friend.id} onClick={this.handleStartNewClick}
+                            style={{position:'absolute', right:'20px'}}>Start Game</button>
         )
-      }else{
-        return(<button id="start-game" type="start-game" 
-                          value={friend.id} onClick={this.handleStartNewClick}
-                          style={{position:'absolute', right:'20px'}}>Start Game</button>
-      )
+      }
     }
   }
 
+  handleAcceptFriendsClick = (friendship) =>{
+    // console.log(friendship)
+    this.acceptFriends(friendship)
+  }
+
+  handleDeclineFriendsClick = (friendship) =>{
+    // console.log(friendship)
+    this.declineFriends(friendship)
+  }
+
+  acceptFriends = (friendship) =>{
+    console.log(this.state.friendships)
+    let friendshipList =this.state.friendships.map(friend =>{
+      if(friend.id === friendship[0].id){
+        return {...friend, accepted: true}
+      }else{
+        return friend
+      }
+    })
+    // console.log(friendshipList)
+    this.setState({
+      ...this.state,
+      friendships: friendshipList
+    },
+    ()=> this.patchFriendship(friendship)
+    )
+  }
+
+  declineFriends = (friendship) =>{
+    let friendshipList = this.state.friendships.filter(friend => friend.id !== friendship[0].id)
+    // console.log(this.state.friendships)
+    // console.log(friendshipList)
+    let friendList = this.state.myFriends.filter(friend => friend.id !== friendship[0].user1_id)
+    this.setState({
+      ...this.state,
+      myFriends: friendList,
+      friendships: friendshipList
+    },
+    () => this.deleteFriendship(friendship)
+    )
+  }
+
+  deleteFriendship = (friendship) =>{
+    fetch(`http://localhost:3001/friendships/${friendship[0].id}`, {
+      method: 'DELETE'
+    })
+    .then(res => res.json())
+  }
+
+  patchFriendship = (friendship) =>{
+    let patchData = friendship[0]
+    let patchDataFix = {...patchData, accepted: true}
+    fetch(`http://localhost:3001/friendships/${friendship[0].id}`, {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(patchDataFix)
+    })
+    .then(res => res.json())
+  }
 
   getGames = () =>{
     fetch('http://localhost:3001/games')
@@ -170,7 +237,7 @@ class User extends React.Component {
       return(<div>{`vs. ${opponentName}`}<Link to='/game'><button id="accept-game" type="accept-game" 
       value="accept-game" onClick={() => this.handleAcceptGameClick(game, opponentName, userScore)}
       style={{position:'absolute', right:'140px', backgroundColor: 'green', width: '100px'}}>Accept</button></Link><button id="decline-game" type="decline-game" 
-      value="decline-game" onClick={() => this.handleAcceptGameClick(game, opponentName, userScore)}
+      value="decline-game" onClick={() => this.handleDeclineGameClick(game)}
       style={{position:'absolute', right:'20px', backgroundColor: 'red', width: '100px'}}>Decline</button></div>)
     }else if((this.props.userId === game.user1_id && game.player1turn === true) || (this.props.userId === game.user2_id && game.player1turn === false)){
       return(<div>{`vs. ${opponentName}`}<Link to='/game'><button id="continue-game" type="continue-game" 
@@ -186,6 +253,20 @@ class User extends React.Component {
   handleAcceptGameClick = (game, opponentName, userScore) =>{
     let newTiles =this.setTiles()
     this.props.setTiles(newTiles, opponentName, game.user1_id, game.user2_id, game.id)
+  }
+
+  handleDeclineGameClick = (game) =>{
+    this.declineGame(game)
+  }
+
+  declineGame = (game) =>{
+    let myGames = this.state.myGames.filter(myGame => myGame.id !== game.id)
+    this.setState({
+      ...this.state,
+      myGames: myGames
+    },
+    () => this.deleteGame(game)
+    )
   }
 
   getOpponentName = (game) =>{
@@ -266,7 +347,6 @@ class User extends React.Component {
     .then(res => res.json())
     .then(game =>{
       //console.log(game)
-      
     })
   }
 
@@ -297,7 +377,7 @@ class User extends React.Component {
     if(this.state.friendsearch === true){
       return(
         <div className="user-page-form" style={{marginTop:'10px', marginBottom:'10px', maxWidth:'100%', height:'640px', textAlign: 'left', padding: '35px'}}>
-          <h2 style={{fontSize: '40px'}}> Search <button style={{marginLeft:'59px',top: '0px'}} onClick={this.handleFindFriendsClick}>{this.state.friendsearch ? 'Back' : 'Find Friends'}</button></h2> 
+          <h2 style={{fontSize: '40px'}}> Search <button style={{marginLeft:'59px',top: '0px', backgroundColor:'purple'}} onClick={this.handleFindFriendsClick}>{this.state.friendsearch ? 'Back' : 'Find Friends'}</button></h2> 
           <input type="text" onChange={this.handleSearchInputChange} name='namesearch' placeholder="username search"  />
           {this.renderFriendSearch()}  
         </div>
@@ -305,7 +385,7 @@ class User extends React.Component {
     }else{
       return(
         <div className="user-page-form" style={{marginTop:'10px', marginBottom:'10px', maxWidth:'100%', height:'640px', textAlign: 'left', padding: '35px'}}>
-            <h2 style={{fontSize: '40px'}}> Friends <button style={{marginLeft:'49px',top: '0px'}} onClick={this.handleFindFriendsClick}>{this.state.friendsearch ? 'Back' : 'Find Friends'}</button></h2>   
+            <h2 style={{fontSize: '40px'}}> Friends <button style={{marginLeft:'49px',top: '0px', backgroundColor:'purple'}} onClick={this.handleFindFriendsClick}>{this.state.friendsearch ? 'Back' : 'Find Friends'}</button></h2>   
             {this.renderFriends(this.state.searchInput)}                       
         </div>
       )
@@ -323,19 +403,38 @@ class User extends React.Component {
     let i = 0
     return searchResults.map(friend =>{
         i++
-        return <div key={i}>
-                    <h2 style={{marginTop:'30px'}}>{friend.username}
-                        <button id="friend-request" type="friend-request" 
-                        value={friend.id} onClick={this.handleFriendRequestClick}
-                        style={{position:'absolute', right:'20px'}}>Friend Request</button>
+        let friendship = this.state.friendships.filter(friendship => friendship.user1_id === friend.id || friendship.user2_id === friend.id)
+        if(friendship[0] !== undefined){
+              if(friendship[0].accepted === false && friendship[0].user1_id === this.props.userId){
+                return <div key={i}>
+                            <h2 style={{marginTop:'30px'}}>{friend.username}
+                              <button id="pending-friend" type="pending-friend" 
+                                    style={{position:'absolute', right:'20px', backgroundColor: 'grey'}}>Pending</button>
+                            </h2>   
+                        </div>
+              }else{
+                return <div key={i}>
+                            <h2 style={{marginTop:'30px'}}>{friend.username}
+                              <button id="already-friend" type="already-friend" 
+                                    style={{position:'absolute', right:'20px', backgroundColor: 'grey'}}>Already Friends</button>
+                            </h2>   
+                        </div>
+              }
+         }else{
+          return <div key={i}>
+                      <h2 style={{marginTop:'30px'}}>{friend.username}
+                          <button id="friend-request" type="friend-request" 
+                          value={friend.id} onClick={this.handleFriendRequestClick}
+                          style={{position:'absolute', right:'20px'}}>Friend Request</button>
 
-                    </h2>   
-                </div>
+                      </h2>   
+                  </div>
+         }
     })
   }
 
   handleFriendRequestClick = (e) =>{
-    console.log(e.target.value)
+    // console.log(e.target.value)
     this.makeFriends(e.target.value)
   }
 
@@ -371,6 +470,13 @@ class User extends React.Component {
     })
   }
 
+  deleteGame = (game) =>{
+    fetch(`http://localhost:3001/games/${game.id}`, {
+      method: 'DELETE'
+    })
+    .then(res => res.json())
+  }
+
   render(){
     return (
         <div>
@@ -378,7 +484,7 @@ class User extends React.Component {
             <div className='crab1'></div>
             <div className="user-info">
                 <div className="username-block">
-                    <div className="user-page-form" style={{marginTop:'10px', maxWidth:'900px', textAlign: 'left', padding: '35px'}}>
+                    <div className="user-page-top-form" style={{marginTop:'10px', maxWidth:'900px', textAlign: 'left', padding: '35px'}}>
                         <h2 style={{fontSize: '40px'}}> Hello {this.props.username} ! </h2>   
                         <Link to='/login'><button id="logout" value="logout" onClick={this.handleLogOutClick}
                                             style={{marginTop:'10px', width:'20%'}}>Log Out </button></Link>
@@ -388,7 +494,7 @@ class User extends React.Component {
                     {this.renderFriendsBlock()}
                 </div>
                 <div className="active-games-block">
-                    <div className="user-page-form" style={{marginTop:'10px', maxWidth:'100%', height:'640px', textAlign: 'left', padding: '35px'}}>
+                    <div className="user-page-form" style={{marginTop:'10px', maxWidth:'100%', height:'640px', textAlign: 'left', padding: '35px', backgroundPosition: 'right'}}>
                         <h2 style={{fontSize: '40px'}}> ActiveGames </h2>   
                         {this.renderGames()}   
                     </div>

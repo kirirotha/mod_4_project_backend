@@ -57,6 +57,7 @@ class Login extends React.Component {
         <div>
             <div className='background'></div>
             <div className='crab1'></div>
+            <div className='large-logo'></div>
             <div className="login-page">
                 <div className="form">
                     <form className="login-form"onSubmit={this.handleSubmit}>
