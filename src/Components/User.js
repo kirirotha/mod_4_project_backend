@@ -19,7 +19,7 @@ class User extends React.Component {
   }
 
   componentDidMount(){
-    this.getFriendships()
+    this.getUsers()
   }
 
   handleInputChange = (e) => {
@@ -29,85 +29,88 @@ class User extends React.Component {
   }
 
 
-  getFriendships = () =>{
-      fetch('http://localhost:3001/friendships')
-      .then(res => res.json())
-      .then(friendships =>{
-        // console.log(friendships)
-        this.findFriendships(friendships)  
-      })
-  }
+  // getFriendships = () =>{
+  //     fetch('http://localhost:3001/friendships')
+  //     .then(res => res.json())
+  //     .then(friendships =>{
+  //       // console.log(friendships)
+  //       this.findFriendships(friendships)  
+  //     })
+  // }
 
-  findFriendships = (friendships) =>{
-    let myFriendships = friendships.filter(friends =>{
-        if(friends.user1_id === this.props.userId || friends.user2_id === this.props.userId){
-            return friends
-        }
-        return
-    })
-    this.setState({
-        ...this.state,
-        friendships: myFriendships
-    }, () => this.findFriends())
-  }
+  // findFriendships = (friendships) =>{
+  //   let myFriendships = friendships.filter(friends =>{
+  //       if(friends.user1_id === this.props.userId || friends.user2_id === this.props.userId){
+  //           return friends
+  //       }
+  //       return
+  //   })
+  //   this.setState({
+  //       ...this.state,
+  //       friendships: myFriendships
+  //   }, () => this.findFriends())
+  // }
 
-  findFriends = () =>{
-    fetch('http://localhost:3001/users')
-      .then(res => res.json())
-      .then(users =>{
-        // console.log(users)
-        this.getFriends(users)
-        this.setState({
-          ...this.state,
-          users: users
-        })
-    })
-  }
+  // findFriends = () =>{
+  //   fetch('http://localhost:3001/users')
+  //     .then(res => res.json())
+  //     .then(users =>{
+  //       // console.log(users)
+  //       this.getFriends(users)
+  //       this.setState({
+  //         ...this.state,
+  //         users: users
+  //       })
+  //   })
+  // }
 
-  getFriends = (users) =>{
-      //console.log(users)
-      let myFriendIds = this.state.friendships.map(friendship =>{
-          if(friendship.user1_id === this.props.userId){
-            return friendship.user2_id
-          }else if(friendship.user2_id === this.props.userId){
-            return friendship.user1_id
-          }
-      })
-      let myFriends = myFriendIds.map(id =>{
-          for(let i=0; i < users.length; i++){
-            if(users[i].id === id){
-                return users[i]
-            }
-          }
-      })
-      this.setState({
-        ...this.state,
-        myFriends: myFriends
-      }, () => {
-            this.renderFriends()
-            this.getGames()
-        })
-  }
+  // getFriends = (users) =>{
+  //     //console.log(users)
+  //     let myFriendIds = this.state.friendships.map(friendship =>{
+  //         if(friendship.user1_id === this.props.userId){
+  //           return friendship.user2_id
+  //         }else if(friendship.user2_id === this.props.userId){
+  //           return friendship.user1_id
+  //         }
+  //     })
+  //     let myFriends = myFriendIds.map(id =>{
+  //         for(let i=0; i < users.length; i++){
+  //           if(users[i].id === id){
+  //               return users[i]
+  //           }
+  //         }
+  //     })
+  //     this.setState({
+  //       ...this.state,
+  //       myFriends: myFriends
+  //     }, () => {
+  //           this.renderFriends()
+  //           this.getGames()
+  //       })
+  // }
 
   renderFriends = () =>{
-    let i = 0
-    return this.state.myFriends.map(friend =>{
-        i++
-        if(friend !== undefined){
-          return <div key={i}>
-                      <h2 style={{marginTop:'30px'}}>{friend.username ? friend.username : null}
-                          
-                        {this.renderFriendsButton(friend)}
-                      </h2>   
-                  </div>
-        }
-    })
+    if(this.props.myFriends){
+      let i = 0
+      return this.props.myFriends.map(friend =>{
+          i++
+          if(friend !== undefined){
+            return <div key={i}>
+                        <h2 style={{marginTop:'30px'}}>{friend.username ? friend.username : null}
+                            
+                          {this.renderFriendsButton(friend)}
+                        </h2>   
+                    </div>
+          }
+      })
+    }
   }
 
   renderFriendsButton = (friend) => {
-    let friendship = this.state.friendships.filter(friendship => friendship.user1_id === friend.id || friendship.user2_id === friend.id)
+    let friendship = this.props.friendships.filter(friendship => friendship.user1_id === friend.id || friendship.user2_id === friend.id)
+    
     if(friendship[0] !== undefined){ 
-      if(friendship[0].accepted === false && friendship[0].user2_id === this.props.userId){
+      if(friendship[0].accepted === false && friendship[0].user2_id === Number(this.props.userId)){
         return(
           <>
                 <button id="accept-friendship" type="accept-friendship" 
@@ -118,16 +121,20 @@ class User extends React.Component {
                     style={{position:'absolute', right:'20px', backgroundColor: 'red', width: '100px'}}>Decline</button>
           </>
           )
-        }else if(friendship[0].accepted === false && friendship[0].user1_id === this.props.userId){
+        }else if(friendship[0].accepted === false && friendship[0].user1_id === Number(this.props.userId)){
           return(<button id="pending-friend" type="pending-friend" 
                             style={{position:'absolute', right:'20px', backgroundColor: 'grey'}}>Pending</button>
           )
-        }else{
+        }else if(friendship[0].accepted === true){
           return(<button id="start-game" type="start-game" 
                             value={friend.id} onClick={this.handleStartNewClick}
                             style={{position:'absolute', right:'20px'}}>Start Game</button>
-        )
-      }
+          )
+        }else{
+          return(<button id="pending-friend" type="pending-friend" 
+                            style={{position:'absolute', right:'20px', backgroundColor: 'grey'}}>Pending</button>
+          )
+        }
     }
   }
 
@@ -143,7 +150,7 @@ class User extends React.Component {
 
   acceptFriends = (friendship) =>{
     console.log(this.state.friendships)
-    let friendshipList =this.state.friendships.map(friend =>{
+    let friendshipList =this.props.friendships.map(friend =>{
       if(friend.id === friendship[0].id){
         return {...friend, accepted: true}
       }else{
@@ -151,26 +158,17 @@ class User extends React.Component {
       }
     })
     // console.log(friendshipList)
-    this.setState({
-      ...this.state,
-      friendships: friendshipList
-    },
-    ()=> this.patchFriendship(friendship)
-    )
+    this.props.acceptFriends(friendshipList)
+    this.patchFriendship(friendship)
   }
 
   declineFriends = (friendship) =>{
-    let friendshipList = this.state.friendships.filter(friend => friend.id !== friendship[0].id)
+    let friendshipList = this.props.friendships.filter(friend => friend.id !== friendship[0].id)
     // console.log(this.state.friendships)
     // console.log(friendshipList)
-    let friendList = this.state.myFriends.filter(friend => friend.id !== friendship[0].user1_id)
-    this.setState({
-      ...this.state,
-      myFriends: friendList,
-      friendships: friendshipList
-    },
-    () => this.deleteFriendship(friendship)
-    )
+    let friendList = this.props.myFriends.filter(friend => friend.id !== friendship[0].user1_id)
+    this.props.updateFriends(friendList, friendshipList)
+    this.deleteFriendship(friendship)
   }
 
   deleteFriendship = (friendship) =>{
@@ -201,7 +199,7 @@ class User extends React.Component {
 
   findGames = (games) =>{
     let myGames = games.filter(game =>{
-        if(game.user1_id === this.props.userId || game.user2_id === this.props.userId){
+        if(game.user1_id === Number(this.props.userId) || game.user2_id === Number(this.props.userId)){
             return game
         }
         return
@@ -214,39 +212,44 @@ class User extends React.Component {
   }
 
   renderGames = () =>{
-    let i = 0
-    return this.state.myGames.map(game =>{
-        i++
-        let opponentName = this.getOpponentName(game)
-        let userScore = this.getUserScore(game)
-        return <div key={i}>
-                    <h2 style={{marginTop:'30px'}}>
-                        
-                        {this.renderGameButton(game,opponentName,userScore)}
-                    </h2>   
-                </div>
-    })
+    if(this.props.myGames){
+      let i = 0
+      return this.props.myGames.map(game =>{
+          i++
+          let opponentName = this.getOpponentName(game)
+          let userScore = this.getUserScore(game)
+          return <div key={i}>
+                      <h2 style={{marginTop:'30px'}}>
+                          {this.renderGameButton(game,opponentName,userScore)}
+                      </h2>   
+                  </div>
+      })
+    }
   }
 
   renderGameButton = (game, opponentName, userScore) => {
-    if(this.props.userId === game.user2_id && game.accepted === false){
+    if(Number(this.props.userId) === game.user2_id && game.accepted === false){
       return(<div>{`vs. ${opponentName}`}<button id="pending" type="pending" 
       value="pending" 
       style={{position:'absolute', right:'20px', backgroundColor: 'grey'}}>Pending</button> </div>)
-    }else if(this.props.userId === game.user1_id && game.accepted === false){
+    }else if(Number(this.props.userId) === game.user1_id && game.accepted === false){
       return(<div>{`vs. ${opponentName}`}<Link to='/game'><button id="accept-game" type="accept-game" 
       value="accept-game" onClick={() => this.handleAcceptGameClick(game, opponentName, userScore)}
       style={{position:'absolute', right:'140px', backgroundColor: 'green', width: '100px'}}>Accept</button></Link><button id="decline-game" type="decline-game" 
       value="decline-game" onClick={() => this.handleDeclineGameClick(game)}
       style={{position:'absolute', right:'20px', backgroundColor: 'red', width: '100px'}}>Decline</button></div>)
-    }else if((this.props.userId === game.user1_id && game.player1turn === true) || (this.props.userId === game.user2_id && game.player1turn === false)){
+    }else if((Number(this.props.userId) === game.user1_id && game.player1turn === true) || (Number(this.props.userId) === game.user2_id && game.player1turn === false)){
       return(<div>{`vs. ${opponentName}`}<Link to='/game'><button id="continue-game" type="continue-game" 
       value="continue-game" onClick={() => this.handleContinueClick(game, opponentName, userScore)}
       style={{position:'absolute', right:'20px'}}>Your Turn</button></Link></div>)
-    }else{
+    }else if((Number(this.props.userId) === game.user1_id && game.player1turn === false) || (Number(this.props.userId) === game.user2_id && game.player1turn === true)){
       return(<div>{`vs. ${opponentName}`}<Link to='/game'><button id="continue-game" type="continue-game" 
       value="continue-game" onClick={() => this.handleContinueClick(game, opponentName, userScore)}
       style={{position:'absolute', right:'20px', backgroundColor: 'purple'}}>{`${opponentName}'s Turn`}</button></Link></div>)
+    }else{
+      return(<div>{`vs. ${opponentName}`}<button id="pending" type="pending" 
+      value="pending" 
+      style={{position:'absolute', right:'20px', backgroundColor: 'grey'}}>Pending</button> </div>)
     }
   }
 
@@ -260,17 +263,13 @@ class User extends React.Component {
   }
 
   declineGame = (game) =>{
-    let myGames = this.state.myGames.filter(myGame => myGame.id !== game.id)
-    this.setState({
-      ...this.state,
-      myGames: myGames
-    },
-    () => this.deleteGame(game)
-    )
+    let myGames = this.props.myGames.filter(myGame => myGame.id !== game.id)
+    this.props.declineGame(game)
+    this.deleteGame(game)
   }
 
   getOpponentName = (game) =>{
-      let opponent = this.state.myFriends.filter(friend =>{
+      let opponent = this.props.myFriends.filter(friend =>{
           if(game.user1_id === friend.id || game.user2_id === friend.id){
               return friend
           }
@@ -280,7 +279,7 @@ class User extends React.Component {
 
   getUserScore = (game) =>{
     let userScore = ""
-    if (this.props.userId === game.user1_id){
+    if (Number(this.props.userId) === game.user1_id){
       userScore = game.user1_score
     }else{
       userScore = game.user2_score
@@ -328,7 +327,7 @@ class User extends React.Component {
     let newTiles =this.setTiles()
     let newGame ={
     "user1_id": Number(id),
-    "user2_id": this.props.userId,
+    "user2_id": Number(this.props.userId),
     "user1_score": 0,
     "user2_score": 0,
     "user1_bag": newTiles[0],
@@ -338,7 +337,7 @@ class User extends React.Component {
     "player1turn": true
     }
     // console.log(newGame)
-    this.renderNewGame(newGame)
+    this.props.startNewGame(newGame)
     fetch('http://localhost:3001/games',{
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -378,7 +377,7 @@ class User extends React.Component {
       return(
         <div className="user-page-form" style={{marginTop:'10px', marginBottom:'10px', maxWidth:'100%', height:'640px', textAlign: 'left', padding: '35px'}}>
           <h2 style={{fontSize: '40px'}}> Search <button style={{marginLeft:'59px',top: '0px', backgroundColor:'purple'}} onClick={this.handleFindFriendsClick}>{this.state.friendsearch ? 'Back' : 'Find Friends'}</button></h2> 
-          <input type="text" onChange={this.handleSearchInputChange} name='namesearch' placeholder="username search"  />
+          <input type="text" onChange={this.handleSearchInputChange} name='namesearch' placeholder="Username Search"  />
           {this.renderFriendSearch()}  
         </div>
       )
@@ -392,6 +391,18 @@ class User extends React.Component {
     }
   }
 
+  getUsers = () =>{
+    fetch('http://localhost:3001/users')
+      .then(res => res.json())
+      .then(users =>{
+        // console.log(users)
+        this.setState({
+          ...this.state,
+          users: users
+        })
+    })
+  }
+
   renderFriendSearch = () =>{
     let searchInput = this.state.searchInput
     let searchResults = []
@@ -403,9 +414,9 @@ class User extends React.Component {
     let i = 0
     return searchResults.map(friend =>{
         i++
-        let friendship = this.state.friendships.filter(friendship => friendship.user1_id === friend.id || friendship.user2_id === friend.id)
+        let friendship = this.props.friendships.filter(friendship => friendship.user1_id === friend.id || friendship.user2_id === friend.id)
         if(friendship[0] !== undefined){
-              if(friendship[0].accepted === false && friendship[0].user1_id === this.props.userId){
+              if(friendship[0].accepted === false && friendship[0].user1_id === Number(this.props.userId)){
                 return <div key={i}>
                             <h2 style={{marginTop:'30px'}}>{friend.username}
                               <button id="pending-friend" type="pending-friend" 
@@ -440,7 +451,7 @@ class User extends React.Component {
 
   makeFriends = (id) =>{
     let friendshipData = {
-      user1_id: this.props.userId,
+      user1_id: Number(this.props.userId),
       user2_id: Number(id),
       accepted: false,
       active: true,
@@ -458,11 +469,12 @@ class User extends React.Component {
   }
 
   renderNewFriend = (friendship) =>{
-    let friendshipList = this.state.friendships
+    let friendshipList = this.props.friendships
     friendshipList.push(friendship)
-    let myFriends = this.state.myFriends
+    let myFriends = this.props.myFriends
     let myFriend = this.state.users.filter(user => user.id === friendship.user2_id)
     myFriends.push(myFriend[0])
+    this.props.updateFriends(myFriends,friendshipList)
     this.setState({
       ...this.state,
       friendships: friendshipList,

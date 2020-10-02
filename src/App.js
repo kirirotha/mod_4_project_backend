@@ -15,6 +15,7 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
+import Tiles from './Components/Tiles';
 
 // import staticBooks from './books'
 
@@ -25,7 +26,11 @@ class App extends Component {
     userId: "",
     game: "",
     opponentName: "",
-    userScore: ""
+    userScore: "",
+    myGames: [],
+    friendships: [],
+    myFriends: [],
+    users:[]
   }
 
   componentDidMount(){
@@ -34,9 +39,12 @@ class App extends Component {
         ...this.state,
         username: localStorage.getItem('username'),
         userId: localStorage.getItem('userId'),
-        loggedIn: true
-      })
-      
+        loggedIn: true,
+        myGames: JSON.parse(localStorage.getItem('myGames')),
+        myFriends: JSON.parse(localStorage.getItem('myFriends')),
+        friendships: JSON.parse(localStorage.getItem('friendships'))
+      },
+      )
     }
   }
 
@@ -47,7 +55,9 @@ class App extends Component {
         loggedIn: true,
         username: username,
         userId: userId
-      })
+      },
+      () => this.getFriendships()
+      )
       // console.log('logging in')
     }
   }
@@ -114,8 +124,172 @@ class App extends Component {
 
   }
 
-  backToUser = () =>{
+  
+  getFriendships = () =>{
+    fetch('http://localhost:3001/friendships')
+    .then(res => res.json())
+    .then(friendships =>{
+      // console.log(friendships)
+      this.findFriendships(friendships)  
+    })
+}
 
+findFriendships = (friendships) =>{
+  let myFriendships = friendships.filter(friends =>{
+      if(friends.user1_id === this.state.userId || friends.user2_id === this.state.userId){
+          return friends
+      }
+      return
+  })
+  this.setState({
+      ...this.state,
+      friendships: myFriendships
+  }, () => {
+    this.findFriends()
+    localStorage.setItem('friendships', JSON.stringify(myFriendships))
+  })
+}
+
+findFriends = () =>{
+  fetch('http://localhost:3001/users')
+    .then(res => res.json())
+    .then(users =>{
+      // console.log(users)
+      this.getFriends(users)
+      this.setState({
+        ...this.state,
+        users: users
+      })
+  })
+}
+
+getFriends = (users) =>{
+    //console.log(users)
+    let myFriendIds = this.state.friendships.map(friendship =>{
+        if(friendship.user1_id === this.state.userId){
+          return friendship.user2_id
+        }else if(friendship.user2_id === this.state.userId){
+          return friendship.user1_id
+        }
+    })
+    let myFriends = myFriendIds.map(id =>{
+        for(let i=0; i < users.length; i++){
+          if(users[i].id === id){
+              return users[i]
+          }
+        }
+    })
+    this.setState({
+      ...this.state,
+      myFriends: myFriends
+    }, () => {
+            localStorage.setItem('myFriends', JSON.stringify(myFriends))
+          this.getGames()
+      })
+}
+
+
+getGames = () =>{
+  fetch('http://localhost:3001/games')
+  .then(res => res.json())
+  .then(games =>{
+    this.findGames(games)  
+  })
+}
+
+findGames = (games) =>{
+  let myGames = games.filter(game =>{
+      if(game.user1_id === this.state.userId || game.user2_id === this.state.userId){
+          return game
+      }
+      return
+  })
+  // console.log(myGames)
+  this.setState({
+      ...this.state,
+      myGames: myGames
+  },
+  () => {localStorage.setItem('myGames', JSON.stringify(myGames))}
+  )
+}
+
+declineGame = (game) =>{
+  let myGames = this.state.myGames.filter(myGame => myGame.id !== game.id)
+  this.setState({
+    ...this.state,
+    myGames: myGames
+  },
+  () => {localStorage.setItem('myGames', JSON.stringify(myGames))}
+  )
+}
+
+  acceptFriends = (friendshipList) =>{
+    this.setState({
+      ...this.state,
+      friendships: friendshipList
+    },
+    () => {localStorage.setItem('friendships', JSON.stringify(friendshipList))}
+    )
+  }
+
+  updateFriends = (friendList, friendshipList) =>{
+    this.setState({
+      ...this.state,
+      myFriends: friendList,
+      friendships: friendshipList
+    },
+    () => {
+      localStorage.setItem('friendships', JSON.stringify(friendshipList))
+      localStorage.setItem('myFriends', JSON.stringify(friendList))
+      }
+    )
+  }
+   
+  startNewGame = (newGame) =>{
+    let gameList = this.state.myGames
+    gameList.push(newGame)
+    this.setState({
+      ...this.state,
+      myGames: gameList
+    },
+    () => {localStorage.setItem('myGames', JSON.stringify(gameList))}
+    )
+  }
+
+  updateGame = (newScore) =>{
+    let player1turn = this.state.game.player1turn
+    if (this.state.game.user1_id === this.state.userId){
+      this.setState({
+        ...this.state,
+          game:{
+            ...this.state.game,
+            user1_score: newScore,
+            player1turn: !player1turn
+          }
+      },
+      () => this.updateGames()
+      )
+    }else if (this.state.game.user2_id === this.state.userId){
+      this.setState({
+        ...this.state,
+          game:{
+            ...this.state.game,
+            user2_score: newScore,
+            player1turn: !player1turn
+          }
+      },
+      () => this.updateGames()
+      )
+    }
+  }
+
+  updateGames = () =>{
+    let gameList = this.state.myGames.filter(game => game.id !== this.state.game.id)
+    gameList.push(this.state.game)
+    this.setState({
+      ...this.state,
+      myGames: gameList
+    })
   }
 
   render(){
@@ -146,13 +320,28 @@ class App extends Component {
             }} />
 
             <Route path="/user" component={() => {
-              return <User handleLogOut={this.handleLogOut} username={this.state.username} userId={this.state.userId} handleContinue={this.handleContinue}
-                            setTiles={this.setTiles}/>}} />
+              return <User handleLogOut={this.handleLogOut} username={this.state.username} 
+                            userId={this.state.userId} handleContinue={this.handleContinue}
+                            myFriends={this.state.myFriends} myGames={this.state.myGames}
+                            friendships = {this.state.friendships} declineGame={this.declineGame}
+                            acceptFriends={this.acceptFriends} updateFriends={this.updateFriends}
+                            startNewGame={this.startNewGame} setTiles={this.setTiles}/>}} />
 
             <Route path="/game" component={() => {
-              return <Game handleLogOut={this.handleLogOut} username={this.state.username} opponentName={this.state.opponentName}
-                            userId={this.state.userId} backToUser={this.backToUser} game={this.state.game} updateScore={this.updateScore} userScore={this.state.userScore}/>}} />
-
+              if(localStorage.getItem('auth_key')){
+                if(this.state.game !== ""){
+                  return <Game handleLogOut={this.handleLogOut} username={this.state.username} opponentName={this.state.opponentName}
+                            userId={this.state.userId} backToUser={this.backToUser} game={this.state.game} updateScore={this.updateScore} 
+                            updateGame={this.updateGame}
+                            userScore={this.state.userScore}/>
+                }else{  
+                  return <Redirect to="/user" />
+                }
+              }else{
+                return <Redirect to="/login" />
+              }
+            }} />
+      
             <Route path="/logout" component={() => {
               localStorage.clear()
               this.handleLogOut()

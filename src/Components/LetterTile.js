@@ -12,9 +12,15 @@ export default function LetterTile(props){
       })
 
     return(
-        <div className="letter-tile" ref={drag} style={{ fontSize: 25, fontWeight: 'bold' }} onMouseDown={()=>props.handleSquareClick(props.index)}>
-            <h2>{props.letter}</h2>
-        </div>
+        <>
+            <div className="letter-tile" ref={drag} style={{ fontSize: 25, fontWeight: 'bold' }} onMouseDown={()=>props.handleSquareClick(props.index)}>
+                <h2>{props.letter}</h2>
+                <div className='point'>
+                    <p>{props.point}</p>
+                </div>
+            </div>
+            
+        </>
     )
 }
 

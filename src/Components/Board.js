@@ -36,16 +36,37 @@ class Board extends React.Component {
     }
 
     renderTile = (x, y, tile)  => {
+        let point = this.getPoints(tile[2])
         if(x === tile[0] && y === tile[1]){
-            return <LetterTile letter={tile[2]} index={tile[3]} handleSquareClick={this.handleSquareClick}/>
+            return <LetterTile letter={tile[2]} point={point} index={tile[3]} handleSquareClick={this.handleSquareClick}/>
         }
+    }
+
+    getPoints = (letter) =>{
+        let point
+        if(letter === 'E' || letter === 'A'|| letter === 'I' || letter === 'O' || letter === 'N' || letter === 'R' || letter === 'T' || letter === 'L'|| letter === 'S'|| letter === 'U'){
+            point = 1
+        }else if(letter === 'D' || letter === 'G'){
+            point = 2
+        }else if(letter === 'B' || letter === 'C' || letter === 'M' || letter === 'P'){
+            point = 3
+        }else if(letter === 'F' || letter === 'H' || letter === 'V' || letter === 'W' || letter === 'Y'){
+            point = 4
+        }else if(letter === 'K'){
+            point = 5
+        }else if(letter === 'J' || letter === 'X'){
+            point = 8
+        }else if(letter === 'Q' || letter === 'Z'){
+            point = 10
+        }else{
+            point = 0
+        }
+        return point
     }
 
     handleSquareClick = (props) =>{
         this.props.selectTile(props)
     }
-
-    
 
     render(){
     return (

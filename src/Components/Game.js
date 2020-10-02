@@ -128,7 +128,7 @@ class Game extends React.Component {
     // console.log(this.props.game.user1_bag)
     let user1_bag
     let user2_bag
-    if(this.props.game.user1_id === this.props.userId){
+    if(this.props.game.user1_id === Number(this.props.userId)){
         user1_bag = this.props.game.user1_bag.split('_')
         user2_bag = this.props.game.user2_bag.split('_')
     }else{
@@ -173,9 +173,9 @@ class Game extends React.Component {
 
   playerTurn = () => {
       let playerState
-      if(this.props.game.player1turn === true && this.props.game.user1_id === this.props.userId){
+      if(this.props.game.player1turn === true && this.props.game.user1_id === Number(this.props.userId)){
             playerState = false
-      }else if(this.props.game.player1turn === false && this.props.game.user2_id === this.props.userId){
+      }else if(this.props.game.player1turn === false && this.props.game.user2_id === Number(this.props.userId)){
             playerState = false
       }else{
             playerState = true
@@ -200,20 +200,20 @@ class Game extends React.Component {
   }
 
   renderUserScore = () =>{
-    if(this.props.game.user1_id === this.props.userId){
-        return <h1 style={{fontSize: '40px'}}> {this.props.game.user1_score} </h1> 
-    }else if(this.props.game.user2_id === this.props.userId){
-        return <h1 style={{fontSize: '40px'}}> {this.props.game.user2_score} </h1> 
+    if(this.props.game.user1_id === Number(this.props.userId)){
+        return <h1 style={{fontSize: '40px'}}> {Number(this.props.game.user1_score)} </h1> 
+    }else if(this.props.game.user2_id === Number(this.props.userId)){
+        return <h1 style={{fontSize: '40px'}}> {Number(this.props.game.user2_score)} </h1> 
     }else{
         return <h1 style={{fontSize: '40px'}}> -error- </h1> 
     }
   }
 
   renderOpponentScore = () =>{
-    if(this.props.game.user1_id === this.props.userId){
-        return <h1 style={{fontSize: '40px'}}> {this.props.game.user2_score} </h1> 
-    }else if(this.props.game.user2_id === this.props.userId){
-        return <h1 style={{fontSize: '40px'}}> {this.props.game.user1_score} </h1> 
+    if(this.props.game.user1_id === Number(this.props.userId)){
+        return <h1 style={{fontSize: '40px'}}> {Number(this.props.game.user2_score)} </h1> 
+    }else if(this.props.game.user2_id === Number(this.props.userId)){
+        return <h1 style={{fontSize: '40px'}}> {Number(this.props.game.user1_score)} </h1> 
     }else{
         return <h1 style={{fontSize: '40px'}}> -error- </h1> 
     }
@@ -281,6 +281,7 @@ class Game extends React.Component {
             }
         }
         let newScore = this.level1Scoring()
+        this.props.updateGame(newScore)
         this.updateGame(newScore)
     }
 
@@ -315,7 +316,7 @@ class Game extends React.Component {
 
     getPatchData = (user_bag, newScore) =>{
         let patchData
-        if(this.props.game.user1_id === this.props.userId){
+        if(this.props.game.user1_id === Number(this.props.userId)){
             patchData = {
                 user1_bag: user_bag,
                 user1_score: newScore,
@@ -370,6 +371,7 @@ class Game extends React.Component {
 
     level1Scoring = () =>{
         let scores = []
+        let newScore = 0
         for( let i =0; i < 7; i++){
             if(this.state.placedTiles[i][1] < 15){
                 let moveItem = {letter: this.state.placedTiles[i][2], x: this.state.placedTiles[i][0], y: this.state.placedTiles[i][1], game_id: this.props.game.id}
@@ -377,19 +379,13 @@ class Game extends React.Component {
                 scores.push(point)
             }
         }
-        // console.log(scores)
-        let tt = scores.reduce((a,b) => a + b)
-        // console.log(tt)
-        // this.props.updateScore(tt)
-         let newScore = this.state.userScore + tt
-        //  this.props.updateScore(newScore)
-        // console.log(newScore)
-        //  this.setState({
-        //     ...this.state,
-        //     newScore: newScore}, () =>{
-        //     console.log('what')
-        // })
-        // this.setScore(newScore)
+        debugger
+        if(scores.length === 0){
+            newScore = this.state.userScore
+        }else{
+            let tt = scores.reduce((a,b) => a + b)
+            newScore = this.state.userScore + tt
+        }
         return newScore
     }
 

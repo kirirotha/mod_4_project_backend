@@ -15,6 +15,7 @@ class Login extends React.Component {
     username: '',
     password: '',
     stayLoggedIn: false,
+    userId: ''
   }
 
   handleInputChange = (e) => {
@@ -42,7 +43,7 @@ class Login extends React.Component {
             // console.log(token.user_id)
             localStorage.setItem('auth_key',token['auth_key'])
             localStorage.setItem('username',this.state.username)
-            localStorage.setItem('userId',this.state.userId)
+            localStorage.setItem('userId',token.user_id)
             this.props.handleLogIn(this.state.username, token.user_id)
             this.props.history.push('/user')
         }else{
