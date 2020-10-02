@@ -5,7 +5,7 @@ import { useDrop } from 'react-dnd'
 
 
 
-const BoardSquare = ({ x, y, letter, tileIndex, movePiece, children })  => {
+const BoardSquare = ({ x, y, letter, color, tileIndex, movePiece, children })  => {
     const [{ isOver }, drop] = useDrop({
       accept: Tiles.ID1,
       drop: () => {
@@ -26,7 +26,7 @@ const BoardSquare = ({ x, y, letter, tileIndex, movePiece, children })  => {
           height: '100%',
         }}
       >
-        <Square x={x} y={y}>{children}</Square>
+        <Square x={x} y={y} color={color}>{children}</Square>
         {isOver && (
           <div
             style={{

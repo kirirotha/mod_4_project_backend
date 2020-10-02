@@ -201,11 +201,11 @@ class Game extends React.Component {
 
   renderUserScore = () =>{
     if(this.props.game.user1_id === Number(this.props.userId)){
-        return <h1 style={{fontSize: '40px'}}> {Number(this.props.game.user1_score)} </h1> 
+        return Number(this.props.game.user1_score)
     }else if(this.props.game.user2_id === Number(this.props.userId)){
-        return <h1 style={{fontSize: '40px'}}> {Number(this.props.game.user2_score)} </h1> 
+        return  Number(this.props.game.user2_score)
     }else{
-        return <h1 style={{fontSize: '40px'}}> -error- </h1> 
+        return  '-error-' 
     }
   }
 
@@ -253,6 +253,7 @@ class Game extends React.Component {
 
     handleClear = () => {
         const tiles =['A','A','A','A','A','A','A','A','A','B','B','C','C','D','D','D','E','E','E','E','E','E','E','E','E','E','E','E','F','F','G','G','G','H','H','I','I','I','I','I','I','I','I','I','J','K','L','L','L','L','M','M','N','N','N','N','N','O','O','O','O','O','O','O','O','P','P','P','Q','R','R','R','R','R','R','S','S','S','S','T','T','T','T','T','T','U','U','U','U','V','V','W','W','X','Y','Y', 'Z', '*', '*']
+        this.props.updateGame(this.level1Scoring())
         this.setState({
             ...this.state,
             unusedTiles: tiles
@@ -281,7 +282,6 @@ class Game extends React.Component {
             }
         }
         let newScore = this.level1Scoring()
-        this.props.updateGame(newScore)
         this.updateGame(newScore)
     }
 
@@ -405,8 +405,8 @@ class Game extends React.Component {
                             movePiece={this.movePiece} selectTile={this.selectTile}/>
                 <div className="scoreboard">
                     <div className="form" style={{marginTop:'10px', maxWidth:'100%', height:'560px', textAlign: 'left', padding: '35px'}}>
-                        <h1 style={{fontSize: '40px'}}> Your Score: </h1> 
-                        {this.renderUserScore()}
+                        <h1 style={{fontSize: '40px'}}> Your Score: </h1>                        
+                        <h1 style={{fontSize: '40px'}}>{this.state.submitted ? this.level1Scoring() :this.renderUserScore()}</h1> 
                         <br/>
                         <h1 style={{fontSize: '40px'}}> {`${this.props.opponentName}'s Score: `}</h1>  
                         {this.renderOpponentScore()}

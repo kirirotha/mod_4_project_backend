@@ -9,7 +9,7 @@ const Square = (props) =>{
         )
     }else{
         return(
-        <div className="square">
+        <div className="square" style={{backgroundColor: `${props.color}`}}>
             {props.children}
         </div>
          )

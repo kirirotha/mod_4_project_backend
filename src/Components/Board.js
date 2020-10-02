@@ -21,10 +21,11 @@ class Board extends React.Component {
     renderSquare = (i) => {
         const x = i % 15
         const y = Math.floor(i / 15)
-        let tile = this.tileCheck(x,y) 
+        let tile = this.tileCheck(x,y)
+        let tileColor = this.bonusCheck(x,y,i)
         return (
             <div key={i} style={{ width: '6.666667%', height: '5.555556%' }}>
-                <BoardSquare x={x} y={y} letter={tile[2]} tileIndex= {tile[3]} movePiece={this.props.movePiece}>
+                <BoardSquare x={x} y={y} letter={tile[2]} color={tileColor} tileIndex= {tile[3]} movePiece={this.props.movePiece}>
                     {this.renderTile(x, y, tile)}</BoardSquare>
             </div>
         )
@@ -33,6 +34,25 @@ class Board extends React.Component {
     tileCheck = (x,y) =>{
         let thisTile = this.props.placedTiles.filter(tile => ((x === tile[0]) && (y === tile[1])))
         return thisTile.flat()
+    }
+
+    bonusCheck = (x,y,i) =>{
+        
+        if((x === 0 && (y === 0 || y === 7 || y === 14) || (x === 7 && (y === 0 || y === 14)) || (x === 14 && (y === 0 || y === 7 || y === 14)))){
+            return '#DC143C'
+        }else if(i === 3 || i === 11 || i === 36 || i === 38 || i === 45 || i === 52 || i === 59 || i === 92 || i === 96 || i === 98 | i === 102
+            || i === 108 || i === 116 || i === 122 || i === 126 || i === 128 ||  i === 132 || i === 165 || i === 172 || i === 179 || i === 186
+            || i === 188 || i === 213 || i === 221){
+            return '#87CEFA'
+        }else if( i === 16 || i === 28 || i === 32 || i === 42 || i === 48 || i === 56 || i === 64 || i === 70
+            || i === 112 || i === 154 || i === 160 || i === 168 || i === 176 || i === 182 || i === 192 || i === 196 || i === 208){
+            return '#FFB6C1'
+        }else if( i === 20 || i === 24 || i === 76 || i === 80 || i === 84 || i === 88 || i === 136 || i === 140 
+            ||i === 144 || i === 148 || i === 200 || i === 204){
+            return '#4682B4'
+        }else{
+            return 'none'
+        }
     }
 
     renderTile = (x, y, tile)  => {

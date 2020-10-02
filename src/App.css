@@ -199,6 +199,14 @@ body, html {height: 100%}
   z-index: 4;
 }
 
+.win-loss{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  margin-top: 50px;
+  margin-right: 50px;
+}
+
 .friends-block {
   position: absolute;
   width: 420px;

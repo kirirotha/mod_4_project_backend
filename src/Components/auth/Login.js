@@ -44,7 +44,9 @@ class Login extends React.Component {
             localStorage.setItem('auth_key',token['auth_key'])
             localStorage.setItem('username',this.state.username)
             localStorage.setItem('userId',token.user_id)
-            this.props.handleLogIn(this.state.username, token.user_id)
+            localStorage.setItem('wins',token.wins)
+            localStorage.setItem('losses',token.losses)
+            this.props.handleLogIn(this.state.username, token.user_id, token.wins, token.losses)
             this.props.history.push('/user')
         }else{
             this.props.failedLogIn()

@@ -30,7 +30,9 @@ class App extends Component {
     myGames: [],
     friendships: [],
     myFriends: [],
-    users:[]
+    users:[],
+    wins: "",
+    losses: ""
   }
 
   componentDidMount(){
@@ -42,19 +44,23 @@ class App extends Component {
         loggedIn: true,
         myGames: JSON.parse(localStorage.getItem('myGames')),
         myFriends: JSON.parse(localStorage.getItem('myFriends')),
-        friendships: JSON.parse(localStorage.getItem('friendships'))
+        friendships: JSON.parse(localStorage.getItem('friendships')),
+        wins: JSON.parse(localStorage.getItem('wins')),
+        losses: JSON.parse(localStorage.getItem('losses'))
       },
       )
     }
   }
 
-  handleLogIn = (username, userId) =>{
+  handleLogIn = (username, userId, wins, losses) =>{
     if(localStorage.getItem('auth_key')){
       this.setState({
         ...this.state,
         loggedIn: true,
         username: username,
-        userId: userId
+        userId: userId, 
+        wins: wins,
+        losses: losses
       },
       () => this.getFriendships()
       )
@@ -320,7 +326,8 @@ declineGame = (game) =>{
             }} />
 
             <Route path="/user" component={() => {
-              return <User handleLogOut={this.handleLogOut} username={this.state.username} 
+              return <User handleLogOut={this.handleLogOut} username={this.state.username}
+                            wins={this.state.wins} losses={this.state.losses} 
                             userId={this.state.userId} handleContinue={this.handleContinue}
                             myFriends={this.state.myFriends} myGames={this.state.myGames}
                             friendships = {this.state.friendships} declineGame={this.declineGame}
