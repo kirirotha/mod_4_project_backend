@@ -98,6 +98,7 @@ body, html {height: 100%}
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 .form button:hover,.form button:active,.form button:focus {
   background: #006767;
@@ -147,6 +148,7 @@ body, html {height: 100%}
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 .user-page-form {
@@ -186,6 +188,7 @@ body, html {height: 100%}
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 .user-page-form button:hover,.user-page-form button:active,.user-page-form button:focus {
@@ -203,8 +206,8 @@ body, html {height: 100%}
   position: absolute;
   top: 0px;
   right: 0px;
-  margin-top: 50px;
-  margin-right: 50px;
+  margin-top: 40px;
+  margin-right: 60px;
 }
 
 .friends-block {
@@ -247,6 +250,7 @@ body, html {height: 100%}
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 .scoreboard button:hover,.scoreboard button:active,.scoreboard button:focus {
@@ -339,13 +343,14 @@ body, html {height: 100%}
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 .play-panel button:hover,.play-panel button:active,.play-panel button:focus {
   background: #006767;
 }
 
 .play-panel button:disabled{
-   background-color:#E0FFFF; 
+   background-color:#505555; 
 }
 
 .point{
@@ -355,4 +360,16 @@ body, html {height: 100%}
   font-size: 8px;
   color: black;  
   z-index: 40;
+}
+
+.accept:hover{
+  background-color: #046108!important;
+}
+
+.decline:hover{
+  background-color: #8f0505!important;
+}
+
+.opponent-turn:hover{
+  background-color: #440369!important;
 }

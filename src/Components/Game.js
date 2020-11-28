@@ -379,7 +379,6 @@ class Game extends React.Component {
                 scores.push(point)
             }
         }
-        debugger
         if(scores.length === 0){
             newScore = this.state.userScore
         }else{

@@ -27,7 +27,9 @@ class SignUp extends React.Component {
     const newUser = {
       user:{
         username: this.state.username,
-        password: this.state.password
+        password: this.state.password,
+        wins: 0,
+        losses: 0
       }
     }
     console.log(newUser)
@@ -44,7 +46,9 @@ class SignUp extends React.Component {
             localStorage.setItem('auth_key',token['auth_key'])
             localStorage.setItem('username',this.state.username)
             localStorage.setItem('userId',this.state.userId)
-            this.props.handleLogIn(this.state.username, token.user_id)
+            localStorage.setItem('wins', 0 )
+            localStorage.setItem('losses', 0)
+            this.props.handleLogIn(this.state.username, token.user_id, 0, 0)
             this.props.history.push('/user')
         }else{
             this.props.failedLogIn()
@@ -53,22 +57,20 @@ class SignUp extends React.Component {
     })
   }
 
-  goToUserPage = () => {
-
-  }
 
   render(){
     return (
         <div>
             <div className='background'></div>
             <div className='crab1'></div>
+            <div className='large-logo'></div>
             <div className="login-page">
                 <div className="form">
                     <form className="login-form"onSubmit={this.handleSubmit}>
                         <h2> Create Account </h2>
                         <input type="text" onChange={this.handleInputChange} name='username' placeholder="Username"  />
                         <input type="password" onChange={this.handleInputChange} name='password' placeholder="Password"/>
-                        <input type="password-verify" onChange={this.handleInputChange} name='password-verify' placeholder="Verify Password"/>
+                        <input type="password" onChange={this.handleInputChange} name='password-verify' placeholder="Verify Password"/>
                         <button id="submit" type="submit" value="Submit">create account </button>
                         <p className="message">Already have an account? <Link to='/login'>Click Here</Link></p>
                     </form>

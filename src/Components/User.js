@@ -113,10 +113,10 @@ class User extends React.Component {
       if(friendship[0].accepted === false && friendship[0].user2_id === Number(this.props.userId)){
         return(
           <>
-                <button id="accept-friendship" type="accept-friendship" 
+                <button className="accept" id="accept-friendship" type="accept-friendship" 
                     value="accept-friendship" onClick={() => this.handleAcceptFriendsClick(friendship)}
                     style={{position:'absolute', right:'140px', backgroundColor: 'green', width: '100px'}}>Accept</button>
-              <button id="decline-friendship" type="decline-friendship" 
+              <button className="decline" id="decline-friendship" type="decline-friendship" 
                     value="decline-friendship" onClick={() => this.handleDeclineFriendsClick(friendship)}
                     style={{position:'absolute', right:'20px', backgroundColor: 'red', width: '100px'}}>Decline</button>
           </>
@@ -233,9 +233,9 @@ class User extends React.Component {
       value="pending" 
       style={{position:'absolute', right:'20px', backgroundColor: 'grey'}}>Pending</button> </div>)
     }else if(Number(this.props.userId) === game.user1_id && game.accepted === false){
-      return(<div>{`vs. ${opponentName}`}<Link to='/game'><button id="accept-game" type="accept-game" 
+      return(<div>{`vs. ${opponentName}`}<Link to='/game'><button className="accept" id="accept-game" type="accept-game" 
       value="accept-game" onClick={() => this.handleAcceptGameClick(game, opponentName, userScore)}
-      style={{position:'absolute', right:'140px', backgroundColor: 'green', width: '100px'}}>Accept</button></Link><button id="decline-game" type="decline-game" 
+      style={{position:'absolute', right:'140px', backgroundColor: 'green', width: '100px'}}>Accept</button></Link><button className="decline" id="decline-game" type="decline-game" 
       value="decline-game" onClick={() => this.handleDeclineGameClick(game)}
       style={{position:'absolute', right:'20px', backgroundColor: 'red', width: '100px'}}>Decline</button></div>)
     }else if((Number(this.props.userId) === game.user1_id && game.player1turn === true) || (Number(this.props.userId) === game.user2_id && game.player1turn === false)){
@@ -243,7 +243,7 @@ class User extends React.Component {
       value="continue-game" onClick={() => this.handleContinueClick(game, opponentName, userScore)}
       style={{position:'absolute', right:'20px'}}>Your Turn</button></Link></div>)
     }else if((Number(this.props.userId) === game.user1_id && game.player1turn === false) || (Number(this.props.userId) === game.user2_id && game.player1turn === true)){
-      return(<div>{`vs. ${opponentName}`}<Link to='/game'><button id="continue-game" type="continue-game" 
+      return(<div>{`vs. ${opponentName}`}<Link to='/game'><button className="opponent-turn" id="continue-game" type="continue-game" 
       value="continue-game" onClick={() => this.handleContinueClick(game, opponentName, userScore)}
       style={{position:'absolute', right:'20px', backgroundColor: 'purple'}}>{`${opponentName}'s Turn`}</button></Link></div>)
     }else{
@@ -500,6 +500,10 @@ class User extends React.Component {
                         <h2 style={{fontSize: '40px'}}> Hello {this.props.username} ! </h2>   
                         <Link to='/login'><button id="logout" value="logout" onClick={this.handleLogOutClick}
                                             style={{marginTop:'10px', width:'20%'}}>Log Out </button></Link>
+                        <div className='win-loss'>
+                          <h2 style={{fontSize: '30px'}}>Wins: {this.props.wins}</h2>  
+                          <h2 style={{fontSize: '30px'}}>Losses: {this.props.losses}</h2>  
+                        </div>                 
                     </div>
                 </div>
                 <div className="friends-block">
